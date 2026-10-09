@@ -16,7 +16,7 @@ from ui.worker import QueueWorker
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
-        self.setWindowTitle("YouTube Downloader")
+        self.setWindowTitle("YouTube Downloader For VJ")
         self.resize(1120, 800)
         self.settings = load_settings()
         self.queue = []
