@@ -318,6 +318,14 @@ class MainWindow(QMainWindow):
                 event.ignore()
                 return
             self.worker.cancel_queue()
-            self.worker.wait(5000)
+            if not self.worker.wait(5000):
+                QMessageBox.warning(
+                    self,
+                    "종료 지연",
+                    "다운로드 스레드가 5초 내에 종료되지 않았습니다.\n"
+                    "진행 중인 작업을 완전히 취소한 뒤 안전하게 종료하세요."
+                )
+                event.ignore()
+                return
         self._save_all()
         event.accept()

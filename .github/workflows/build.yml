@@ -32,9 +32,16 @@ jobs:
           pip install -r requirements.txt
           pip install pyinstaller
 
+      - name: Run tests
+        run: python -m unittest -v test_core.py
+
+      - name: Install FFmpeg
+        run: choco install ffmpeg -y
+
       - name: Build executable
         run: |
-          pyinstaller --noconfirm --clean --windowed --name YouTubeDownloader --collect-all yt_dlp --collect-all certifi main.py
+          $ffmpeg = (Get-Command ffmpeg).Source
+          pyinstaller --noconfirm --clean --windowed --name YouTubeDownloader --collect-all yt_dlp --collect-all certifi --add-binary "$ffmpeg;." main.py
 
       - name: Package Windows build
         shell: pwsh
@@ -70,6 +77,9 @@ jobs:
           pip install -r requirements.txt
           pip install pyinstaller
 
+      - name: Run tests
+        run: python -m unittest -v test_core.py
+
       - name: Install FFmpeg
         run: |
           brew update
@@ -77,7 +87,8 @@ jobs:
 
       - name: Build macOS app
         run: |
-          pyinstaller --noconfirm --clean --windowed --name YouTubeDownloader --osx-bundle-identifier com.personaltools.youtubedownloader --collect-all yt_dlp --collect-all certifi main.py
+          ffmpeg_path="$(command -v ffmpeg)"
+          pyinstaller --noconfirm --clean --windowed --name YouTubeDownloader --osx-bundle-identifier com.personaltools.youtubedownloader --collect-all yt_dlp --collect-all certifi --add-binary "$ffmpeg_path:." main.py
 
       - name: Package macOS app
         run: |
